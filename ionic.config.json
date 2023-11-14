@@ -1,0 +1,8 @@
+{
+  "name": "J.A.I.D.A",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular",
+  "id": "ea5be8a1"
+}
