@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ChatService {
-  private baseUrl = 'http://127.0.0.1:8000/ap/v1/agent/tasks/';
+  private baseUrl = environment.host + ':' + environment.port + '/ap/v1/agent/tasks/';
   private currentTaskId: string | null = null;
 
   constructor(private http: HttpClient) {}
