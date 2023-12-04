@@ -1,22 +1,47 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Chat with Jada</ion-title>
+    <ion-title><h1>Chat with J.A.I.D.A.</h1></ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
   <ion-list id="message-list">
-    <ion-item *ngFor="let message of messages">
-      <ion-label>
-        {{message.sender}}: {{message.content}}
+    <!-- Loop for each message -->
+    <ion-item *ngFor="let message of messages" lines="none" class="ion-margin-vertical">
+      <ion-label class="ion-text-wrap">
+        <h2 class="ion-margin-bottom">{{ message.sender }}</h2>
+        <p>{{ message.content }}</p>
       </ion-label>
     </ion-item>
+    <!-- Inline loading indicator below all messages for the user's last message while waiting for Jaida's response -->
+    <ion-list *ngIf="lastMessageIsLoading() || isLoading">
+      <ion-item>
+        <ion-thumbnail slot="start">
+          <ion-skeleton-text [animated]="true"></ion-skeleton-text>
+        </ion-thumbnail>
+        <ion-label>
+          <h3>
+            <ion-skeleton-text [animated]="true" style="width: 100%;"></ion-skeleton-text>
+          </h3>
+          <p>
+            <ion-skeleton-text [animated]="true" style="width: 80%;"></ion-skeleton-text>
+          </p>
+          <p>
+            <ion-skeleton-text [animated]="true" style="width: 60%;"></ion-skeleton-text>
+          </p>
+        </ion-label>
+      </ion-item>
+    </ion-list>
   </ion-list>
 
-  <div class="chat-input-container">
+<ion-footer class="chat-input-container">
+  <ion-toolbar>
     <ion-item lines="none">
-      <ion-input [(ngModel)]="userInput" type="text" [autofocus]="true" placeholder="Type your message" (keyup.enter)="sendMessage()"></ion-input>
-      <ion-button slot="end" color="primary" (click)="sendMessage()">Send</ion-button>
+      <ion-input #messageInput class="ion-margin-end" placeholder="Type your message" [(ngModel)]="userInput" (keyup.enter)="sendMessage()"></ion-input>
+      <ion-button shape="round" slot="end" size="default" (click)="sendMessage()">
+        <ion-icon name="send-outline"></ion-icon>&nbsp;
+        Send
+      </ion-button>
     </ion-item>
-  </div>
-</ion-content>
+  </ion-toolbar>
+</ion-footer>

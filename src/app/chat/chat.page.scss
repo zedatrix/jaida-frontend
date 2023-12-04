@@ -2,10 +2,22 @@
   position: fixed;
   bottom: 0;
   width: 100%;
-  background: white; /* or any color that matches your design */
-  padding: 10px;
 }
 
 #message-list {
   margin-bottom: 60px; /* Adjust this value based on the height of the input container */
+}
+
+.message-header {
+  /* Styles for the sender's name */
+  font-weight: bold;
+  margin-bottom: 5px; /* Adjust spacing */
+}
+
+.sender-name {
+  /* Additional styling for the name */
+}
+
+.message-content {
+  /* Styling for the message content */
 }

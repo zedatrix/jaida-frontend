@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { ChatService } from '../services/chat.service';
 
 @Component({
@@ -6,9 +6,13 @@ import { ChatService } from '../services/chat.service';
   templateUrl: './chat.page.html',
   styleUrls: ['./chat.page.scss'],
 })
-export class ChatPage implements OnInit {
-  public messages: Array<{ sender: string, content: string }> = [];
+export class ChatPage implements OnInit, AfterViewInit {
+  public messages: Array<{ sender: string, content: string, isLoading?: boolean }> = [];
   public userInput: string = '';
+  public isLoading: boolean = true;
+
+  // Using '!' to assert that the property will be assigned.
+  @ViewChild('messageInput') messageInput!: ElementRef<HTMLInputElement>;
 
   constructor(private chatService: ChatService) {}
 
@@ -16,40 +20,51 @@ export class ChatPage implements OnInit {
     this.chatService.startChatTask().subscribe(
       response => {
         this.chatService.setCurrentTaskId(response.task_id);
-        console.log(response.task_id);
-        // Add initial response from JAIDA to the messages
         if (response.output) {
           this.messages.push({ sender: 'JAIDA', content: response.output });
+          this.isLoading = false;
         }
       },
       error => {
         console.error('Error starting chat task:', error);
-        // Optionally, show a user-friendly error message
+        this.isLoading = false;
       }
     );
   }
 
+  ngAfterViewInit(): void {
+    this.setFocus();
+  }
+
   sendMessage(): void {
     if (this.userInput.trim()) {
-      // Add user's message to the chat
-      this.messages.push({ sender: 'Me', content: this.userInput });
+      const newMessage = { sender: 'Me', content: this.userInput, isLoading: true };
+      this.messages.push(newMessage);
+      this.userInput = ''; // Clear the input field
 
-      this.chatService.sendMessage(this.userInput).subscribe(
+      this.chatService.sendMessage(newMessage.content).subscribe(
         response => {
-          // Add JAIDA's response to the chat
-          // Assuming the response contains a field 'message'
+          newMessage.isLoading = false; // Remove loading state
           if (response.output) {
             this.messages.push({ sender: 'JAIDA', content: response.output });
           }
         },
         error => {
           console.error('Error sending message:', error);
-          // Optionally, show a user-friendly error message
+          newMessage.isLoading = false;
         }
       );
+    }
+  }
 
-      // Clear the input field
-      this.userInput = '';
+  lastMessageIsLoading(): boolean {
+    if (this.messages.length === 0) return false;
+    return !!this.messages[this.messages.length - 1].isLoading;
+  }
+
+  setFocus() {
+    if (this.messageInput && this.messageInput.nativeElement) {
+      this.messageInput.nativeElement.focus();
     }
   }
 }
