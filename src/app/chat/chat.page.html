@@ -1,0 +1,22 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Chat with Jada</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list id="message-list">
+    <ion-item *ngFor="let message of messages">
+      <ion-label>
+        {{message.sender}}: {{message.content}}
+      </ion-label>
+    </ion-item>
+  </ion-list>
+
+  <div class="chat-input-container">
+    <ion-item lines="none">
+      <ion-input [(ngModel)]="userInput" type="text" autofocus placeholder="Type your message" (keyup.enter)="sendMessage()"></ion-input>
+      <ion-button slot="end" color="primary" (click)="sendMessage()">Send</ion-button>
+    </ion-item>
+  </div>
+</ion-content>

@@ -1,0 +1,11 @@
+.chat-input-container {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background: white; /* or any color that matches your design */
+  padding: 10px;
+}
+
+#message-list {
+  margin-bottom: 60px; /* Adjust this value based on the height of the input container */
+}
